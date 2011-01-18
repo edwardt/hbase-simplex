@@ -58,7 +58,7 @@ RANGESINDICATOR		: 'RANGES';
 BOUNDSINDICATOR		: 'BOUNDS';
 ENDATAINDICATOR		: 'ENDATA';
 
-BOUNDKEY		: ('UP' | 'LO' | 'FX' | 'LI' | 'UI' | 'SC'| 'FR' | 'BV' | 'MI' | 'PL');
+BOUNDKEY		: ('UP' | 'LO' | 'FX' | 'FR' | 'MI' | 'PL');
 ROWTYPE			: ('E' | 'L' | 'G' | 'N');
 IDENTIFIER 		: LETTER TOKEN*;
 NUMERICALVALUE		: '-'? DIGIT DIGIT* ('.' DIGIT*)?;
