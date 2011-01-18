@@ -23,7 +23,7 @@ import org.apache.hadoop.util.ToolRunner;
  * The famous MapReduce word count example for Hadoop.
  */
 public class Simplex extends Configured implements Tool {
-    
+
     public static void main(String[] args) throws Exception {
         int res = ToolRunner.run(new Configuration(), new Simplex(), args);
         System.exit(res);
@@ -32,13 +32,13 @@ public class Simplex extends Configured implements Tool {
     @Override
     public int run(String[] args) throws Exception {
         String[] remainingArgs = new GenericOptionsParser(getConf(), args).getRemainingArgs();
-        
+
         if (remainingArgs.length < 2) {
             System.err.println("Usage: Simplex <in> <out>");
             ToolRunner.printGenericCommandUsage(System.err);
             return 1;
         }
-        
+
         Job job = new Job(getConf(), "Simplex");
         job.setJarByClass(getClass());
 
@@ -52,11 +52,11 @@ public class Simplex extends Configured implements Tool {
 
         FileInputFormat.addInputPath(job, new Path(remainingArgs[0]));
         FileOutputFormat.setOutputPath(job, new Path(remainingArgs[1]));
-        
+
         job.setInputFormatClass(TextInputFormat.class);
 
         boolean success = job.waitForCompletion(true);
-        
+
         return success ? 0 : 1;
     }
 }

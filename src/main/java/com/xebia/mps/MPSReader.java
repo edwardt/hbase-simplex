@@ -14,6 +14,7 @@ import java.io.*;
 public class MPSReader {
 
     protected final static Log LOG = LogFactory.getLog(MPSReader.class);
+
     public MPSMetaData process(File in, Writer out) throws IOException, RecognitionException {
         MPSLexer lexer = new MPSLexer(new ANTLRInputStream(new FileInputStream(in)));
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);

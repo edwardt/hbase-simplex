@@ -14,7 +14,7 @@ public class SimplexDriver extends ProgramDriver {
         addClass("load", LoadTool.class, "Loads a MPS file into an HBase database");
     }
 
-    public static void main (String[] args) throws Throwable {
+    public static void main(String[] args) throws Throwable {
         new SimplexDriver().driver(args);
     }
 }

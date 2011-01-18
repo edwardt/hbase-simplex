@@ -17,8 +17,10 @@ public class MPSMetaData {
 
     private String name;
     private String target;
+    private String rhs;
     private int rowCount;
     private int slackCount;
+    private int boundCount;
     private BufferedWriter out;
     private SortedSet<String> columns = new TreeSet<String>();
     private Set<String> toReverse = new HashSet<String>();
@@ -45,20 +47,12 @@ public class MPSMetaData {
         addRestriction(name);
     }
 
-    private void addRestriction(String name){
+    private void addRestriction(String name) {
         this.rowCount++;
         this.slackCount++;
-        columns.add("SLACK" + slackCount);
-        writeSlack(name);
-    }
-
-    private void writeSlack(String name) {
-        try {
-            out.write(String.format("%1$s\tSLACK%2$d\t1", name, slackCount));
-            out.newLine();
-        } catch (IOException e) {
-            throw new RuntimeException("Error while writing to temporary file.",e);
-        }
+        String slackName = "SLC" + slackCount;
+        columns.add(slackName);
+        writeToFile(name, slackName, Fraction.ONE);
     }
 
     private void addEquation(String name) {
@@ -84,10 +78,10 @@ public class MPSMetaData {
 
     private Fraction toFraction(double value) {
         try {
-                return new Fraction(value);
-            } catch (ConvergenceException e) {
-                throw new RuntimeException("Could not convert number to fraction: " + value, e);
-            }
+            return new Fraction(value);
+        } catch (ConvergenceException e) {
+            throw new RuntimeException("Could not convert number to fraction: " + value, e);
+        }
     }
 
     private void writeToFile(String row, String column, Fraction fraction) {
@@ -95,17 +89,43 @@ public class MPSMetaData {
             out.write(String.format("%1$s\t%2$s\t%3$s", row, column, fractionToString(fraction)));
             out.newLine();
         } catch (IOException e) {
-            throw new RuntimeException("Error while writing to temporary file.",e);
+            throw new RuntimeException("Error while writing to temporary file.", e);
         }
     }
 
     public void registerRightHandSide(String column, String row, double value) {
-        columns.add(column);
-        writeToFile(row, column, toFraction(value));
+        if (rhs == null) {
+            rhs = column;
+        }
+        if (rhs.equals(column)) {
+            writeToFile(row, column, toFraction(value));
+        } else {
+            MPSReader.LOG.info("Ignoring additional rhs: " + column);
+        }
     }
 
-    public void registerBound(MPSBoundType type, String column, String row, double value) {
+    public void registerBound(MPSBoundType type, String variable, double value) {
+        Fraction bound = toFraction(value);
+        Fraction cell = Fraction.ONE;
+        switch (type) {
+            case LO:
+                bound = bound.negate();
+                cell = cell.negate();
+                //fall-through.
+            case UP:
+                addBound(variable, cell, bound);
+                break;
+            default:
+                MPSReader.LOG.info("Ignoring bound type: " + type);
+        }
+    }
 
+    private void addBound(String variable, Fraction cell, Fraction bound) {
+        boundCount++;
+        String boundName = "BND" + boundCount;
+        addRestriction(boundName);
+        writeToFile(boundName, variable, cell);
+        writeToFile(boundName, rhs, bound);
     }
 
     private String fractionToString(Fraction fraction) {
@@ -138,10 +158,6 @@ public class MPSMetaData {
 
     public int getRowCount() {
         return rowCount;
-    }
-
-    public int getSlackCount() {
-        return slackCount;
     }
 
 }

@@ -48,7 +48,7 @@ boundsdatacards		: boundsdatacard+;
 columndatacard		: col=IDENTIFIER row1=IDENTIFIER val1=NUMERICALVALUE {metadata.registerValue($col.text, $row1.text, Double.parseDouble($val1.text));} (row2=IDENTIFIER val2=NUMERICALVALUE {metadata.registerValue($col.text, $row2.text, Double.parseDouble($val2.text));})?;
 rhsdatacard		: col=IDENTIFIER row1=IDENTIFIER val1=NUMERICALVALUE {metadata.registerRightHandSide($col.text, $row1.text, Double.parseDouble($val1.text));} (row2=IDENTIFIER val2=NUMERICALVALUE {metadata.registerRightHandSide($col.text, $row2.text, Double.parseDouble($val2.text));})?;
 rangesdatacard		: IDENTIFIER IDENTIFIER NUMERICALVALUE (IDENTIFIER NUMERICALVALUE)?;
-boundsdatacard		: key=BOUNDKEY row=IDENTIFIER col=IDENTIFIER (val=NUMERICALVALUE {metadata.registerBound(MPSBoundType.valueOf($key.text), $col.text, $row.text, Double.parseDouble($val.text));} )?;	
+boundsdatacard		: key=BOUNDKEY IDENTIFIER var=IDENTIFIER (val=NUMERICALVALUE)? {metadata.registerBound(MPSBoundType.valueOf($key.text), $var.text, $val == null? 0.0 :Double.parseDouble($val.text));};
 
 NAMEINDICATOR		: 'NAME';
 ROWINDICATOR 		: 'ROWS';

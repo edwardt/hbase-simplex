@@ -4,12 +4,7 @@ import com.xebia.mps.MPSMetaData;
 import com.xebia.mps.MPSReader;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.HColumnDescriptor;
-import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.mapreduce.TableOutputFormat;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.util.GenericOptionsParser;
@@ -18,7 +13,6 @@ import org.apache.hadoop.util.ToolRunner;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * Created by IntelliJ IDEA.

@@ -14,10 +14,10 @@ import org.apache.hadoop.mapreduce.Mapper;
  */
 public class TokenizingMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
     private static final IntWritable one = new IntWritable(1);
-    
-    protected void map(LongWritable offset, Text value, Context context) 
+
+    protected void map(LongWritable offset, Text value, Context context)
             throws IOException, InterruptedException {
-        
+
         StringTokenizer tok = new StringTokenizer(value.toString());
         while (tok.hasMoreTokens()) {
             Text word = new Text(tok.nextToken());
